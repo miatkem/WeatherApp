@@ -1,0 +1,176 @@
+.header {
+	width: 100%;
+	height: 150px;
+	margin-left: auto ;
+	margin-right: auto ;
+	clear:both;
+	align-content: center;
+	background: #272c3a;
+}
+
+.header img {
+	float: left;
+	margin-left:20%;
+}
+
+.searchBar {
+	padding-top: 48px;
+	padding-bottom:48px;
+	padding-left: 48px;
+	
+}
+.searchBar form{
+	margin: auto;
+	background: #d2d6d1;
+	padding: 5px 10px;
+	border-radius: 20px;
+	border-width: 3px;
+	border-color:#d2d6d1;
+	float: left;
+	display: inline;
+}
+.searchBar button {
+	background: #d2d6d1;
+	font-size: 24px;
+	margin: auto;
+	border:none;
+}
+
+.searchBar button:hover {
+	background: #c2c6c1;
+	font-size: 24px;
+	margin: auto;
+	border:none;
+}
+
+.searchBar input {
+	background: #d2d6d1;
+	font-size: 24px;
+	margin: auto;
+	border:none;
+}
+
+.searchBar p {
+	float: left;
+	color: #d2d6d1;
+	margin:5px;
+	font-size: 24px;
+}
+#firsttab{
+	margin-left: 20%;
+}
+.tab {
+  width:100%;
+  overflow: hidden;
+  display:  block;
+  border: 1px solid #ccc;
+  background-color: #d2d6d1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+	 display: inline-block;
+	background-color: inherit;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	 padding: 14px 16px;
+	transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #c2c6c1;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.weatherBox { 
+	width:400px;
+	height:300px;
+	background: #7fb5c2;
+	background-image: linear-gradient(#4a6f85, #7fb5c2);
+	display: block;
+	color: #f1f3df;
+	float:left;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.weatherBox #town{
+	color: f1f3df;
+	font-size: 16px;
+	margin: auto;
+	text-align: center;
+	padding-top: 10px;
+}
+
+.weatherBox #weather{
+	display: inline;
+}
+
+.weatherBox #temp{
+	font-size: 32px;
+}
+
+.weatherBox #status{
+	font-size: 18px;
+}
+
+.weatherBox #highlow{
+	padding-left:8px;
+}
+
+.weatherTextContainer {
+	margin-left:15px;
+	margin-right:15px;
+	float: left;
+}
+
+.weatherBox #weatherPhoto{
+	float: right;
+}
+
+.weatherBox img{
+	width:150px;
+	height:150px;
+}
+
+.hourlyForecast{
+	color: #f1f3df;
+	background-image: linear-gradient(#4a6f85, #7fb5c2);
+	width: 400px;
+	float: left;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-bottom: 40px;
+}
+
+.hourlyForecast th, td{
+	color: #f1f3df;
+	width:95px;
+	text-align:center;
+	vertical-align:center;
+	height:20px;
+	padding: auto;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #d2d6d1;
+}
+
+body {
+	background: #7EB6C1;
+	display:inline;
+	margin: auto;
+}
