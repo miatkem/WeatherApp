@@ -7,37 +7,146 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 		
 	<script type = "text/javascript"> 
-	   function setZipcode(){ 
-		
-		 var zip = $("#zip").val();
+	$(document).ready(function() {
+	   $("#zipbtn").click(function(){ 
+			var zip = $("#zip").val();
 		   
-			 $.ajax({
-				 type: 		"GET",
-				 url: 		"weather-0.php",
-				 data: 		"zip="+zip,
+			if(zip != ''){
+				//CURENT WEATHER
+				$.ajax({
+					type: 		"GET",
+					url: 		"getCurrentWeather.php",
+					data: 		"zip="+zip,
 				 
-				 beforeSend: function(){ 		
-								  $("#B").html("<b>waiting....</b>");                },
-			 
-				 error: 		function(xhr, status, error) {  
-								  alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+					beforeSend: function(){ 		
+						$("#weatherBox").html("<b>waiting....</b>");                },
+					error: function(xhr, status, error) {  
+						alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+					success: function(result){
+						r = JSON.parse(result);
+						
+						document.getElementById("townname").textContent=r.name;
+						document.getElementById("lon").textContent=r.coord.lon;
+						document.getElementById("lat").textContent=r.coord.lat;
+						document.getElementById("current-temp").textContent=r.main.temp;
+						document.getElementById("current-status").textContent=r.weather[0].main;
+						document.getElementById("current-icon").src="http://openweathermap.org/img/wn/"+r.weather[0].icon+"@2x.png";
+						document.getElementById("current-high").textContent=r.main.temp_max;
+						document.getElementById("current-low").textContent=r.main.temp_min;
+						document.getElementById("current-humidity").textContent=r.main.humidity;
+						document.getElementById("current-windspeed").textContent=r.wind.speed;
+						document.getElementById("current-winddirection").textContent=convertDegrees(r.wind.deg);
+						document.getElementById("current-sunrise").textContent=convertTimeSinceEpoch(r.sys.sunrise);
+						document.getElementById("current-sunset").textContent=convertTimeSinceEpoch(r.sys.sunset);
+						
+					}
+				});
+				
+				//HOURLY WEATHER
+				$.ajax({
+					type: 		"GET",
+					url: 		"getHourlyWeather.php",
+					data: 		"zip="+zip,
 				 
-				 success: 	function(result){
-					  
-					r = JSON.parse(result);
+					beforeSend: function(){ 		
+						$("#weatherBox").html("<b>waiting....</b>");                },
+					error: function(xhr, status, error) {  
+						alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+					success: function(result){
+						r = JSON.parse(result);
+						
+						var res="<div id=\"town\"><b>" + r.city.name + "</b><br><i>Coordinates: "+ r.city.coord.lat +", "+ r.city.coord.lon +"</i></div><table>";
+						res+="<th>Date/Time</th><th>Outlook</th><th>Temperature</th>"
+						for(var i =0; i<r.cnt; i++)
+						{
+							res+="<tr><td width=\"200px\">"+r.list[i].dt_txt+"</td><td><img src=\"http://openweathermap.org/img/wn/"+r.list[i].weather[0].icon+"@2x.png\"><br>"+r.list[i].weather[0].main+"</td><td>"+r.list[i].main.temp+"&deg;F</td></tr>";
+						}
+						res+="</table>";
+				
+						$("#hourly-table").html(res);
+					}
+				});
+			}
+		});
+		
+		$("#geobtn").click(function(){ 
+			
+			navigator.geolocation.getCurrentPosition(function(position) {
+				lat = position.coords.latitude;
+				lon = position.coords.longitude;
+				$.ajax({
+					type: 		"GET",
+					url: 		"getCurrentWeather.php",
+					data: 	{lat: lat, lon: lon},
 					
-					res =  "<br>City: "		   + r.name +  " "			 +	 /* name property 			*/
-						   "<br>Temperature: " + r.main.temp + "&deg;C " +	 /* main's temp 				*/
-						   "<br>Weather: " 	   + r.weather[0].main + " "		  		/* weather's main property 	*/
-						   ;
-					
-					$("#B").html(res); 
-					
-				}	//         - }  ends definition of function(result){ ... }
-			});	    //         - }) ends  $.ajax({ ...  })  
-	  });			//         - }) ends event handler for button:  click(function(){ })
-	});				//         - }) ends ready event handler:  		ready( function(){ ... })
-		 
+					beforeSend: function(){ 		
+						$("#weatherBox").html("<b>waiting....</b>");                },
+					error: function(xhr, status, error) {  
+						alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+					success: function(result){
+						r = JSON.parse(result);
+						
+						document.getElementById("townname").textContent=r.name;
+						document.getElementById("lon").textContent=r.coord.lon;
+						document.getElementById("lat").textContent=r.coord.lat;
+						document.getElementById("current-temp").textContent=r.main.temp;
+						document.getElementById("current-status").textContent=r.weather[0].main;
+						document.getElementById("current-icon").src="http://openweathermap.org/img/wn/"+r.weather[0].icon+"@2x.png";
+						document.getElementById("current-high").textContent=r.main.temp_max;
+						document.getElementById("current-low").textContent=r.main.temp_min;
+						document.getElementById("current-humidity").textContent=r.main.humidity;
+						document.getElementById("current-windspeed").textContent=r.wind.speed;
+						document.getElementById("current-winddirection").textContent=convertDegrees(r.wind.deg);
+						document.getElementById("current-sunrise").textContent=convertTimeSinceEpoch(r.sys.sunrise);
+						document.getElementById("current-sunset").textContent=convertTimeSinceEpoch(r.sys.sunset);
+					}
+				});
+				
+				//HOURLY WEATHER
+				$.ajax({
+					type: 		"GET",
+					url: 		"getHourlyWeather.php",
+					data: 	{lat: lat, lon: lon},
+				 
+					beforeSend: function(){ 		
+						$("#spinner").html("<b>waiting....</b>");                },
+					error: function(xhr, status, error) {  
+						alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   },
+					success: function(result){
+						r = JSON.parse(result);
+						
+						var res="<div id=\"town\"><b>" + r.city.name + "</b><br><i>Coordinates: "+ r.city.coord.lat +", "+ r.city.coord.lon +"</i></div><table>";
+						res+="<th>Date/Time</th><th>Outlook</th><th>Temperature</th>"
+						for(var i =0; i<r.cnt; i++)
+						{
+							res+="<tr><td width=\"200px\">"+r.list[i].dt_txt+"</td><td><img src=\"http://openweathermap.org/img/wn/"+r.list[i].weather[0].icon+"@2x.png\"><br>"+r.list[i].weather[0].main+"</td><td>"+r.list[i].main.temp+"&deg;F</td></tr>";
+						}
+						res+="</table>";
+				
+						$("#hourly-table").html(res);
+					}
+				});
+			});
+		});    
+	});				
+	
+	function  convertDegrees(degree){
+		if (degree>337.5) return 'N';
+		if (degree>292.5) return 'NW';
+		if(degree>247.5) return 'W';
+		if(degree>202.5) return 'SW';
+		if(degree>157.5) return 'S';
+		if(degree>122.5) return 'SE';
+		if(degree>67.5) return 'E';
+		if(degree>22.5){return 'NE';}
+		return 'N';
+	}
+	
+	function convertTimeSinceEpoch(seconds){
+		var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+		d.setUTCSeconds(seconds);
+		return (d.getHours()%12 + ":"  + d.getMinutes());
+	}
 	</script>
 	
 	
@@ -48,116 +157,73 @@
 		<div class="header">
 			<img src="img/weatherlogo.png" width='150px' height='150px'>
 			<div class="searchbar">
-				<form onsubmit="setZipcode()">
+				<div id="search-zip">
 					<input type="text" id="zip" placeholder="Search Zip Code" name="search">
-					<button type="submit"><img src="https://img.icons8.com/search" width='20px' height='20px'></button>
-				</form>
+					<button type="submit" id="zipbtn"><img src="https://img.icons8.com/search" width='20px' height='20px'></button>
+				</div>
 				<p>-OR-</p>
-				<form onsubmit="setLocation()">
-					<button type="submit" name="search" value="location">Use My Location</button>
-				</form>
+				<div id="search-geolocation">
+					<button type="submit" id="geobtn" name="search" value="location">Use My Location</button>
+				</div>
 			</div>
 		</div>
 		
 		<div class="tab">
-			<button class="tablinks" onclick="openTab('Today')" id="firsttab">Today</button>
-			<button class="tablinks" onclick="openTab('Tomorrow')">Tomorrow</button>
-			<button class="tablinks" onclick="openTab('10-Day')">10-Day</button>
+			<button class="tablinks" onclick="openTab('Current')" id="firsttab">Current</button>
+			<button class="tablinks" onclick="openTab('Hourly')">Hourly</button>
 		</div>
 	
 
 		<!-- Tab content -->
-		<div id="Today" class="tabcontent">
-			<h2>Today's Current Weather</h2>
+		<div id="Current" class="tabcontent">
+			<div id="title"><h2>Current Weather</h2></div>
 			<div class="weatherBox">
 				<div id="town">
-					<b>Hawthorne, NJ</b><br>
-					<i>Coordinates: -118.41, 34.09</i>
+					<b><span  id="townname">Pick a Location Above</span></b><br>
+					<i>Coordinates: <span  id="lat"></span>,<span  id="lon"></span></i>
 				</div>
 				<div id="weather">
 					<div class="weatherTextContainer">
-						<div class="weatherText" id="temp"><span>55 &deg;F</span></div>
-						<div class="weatherText" id="status"><span>CLOUDY</span></div>
-						<div class="weatherText" id="highlow"><span>High: 52 &deg;F</span></div>
-						<div class="weatherText" id="highlow"><span>Low: 40 &deg;F</span></div>
-						<div class="weatherText" id="humidity"><span>Humidity: 20%</span></div>
-						<div class="weatherText" id="UV"><span>UV Index 0 of 10</span></div>
-						<div class="weatherText" id= "wind"><span>Wind Speed: 2.71m/s NE</span></div>
+						<div class="weatherText" id="temp"><span  id="current-temp"></span>&deg;F</div>
+						<div class="weatherText" id="status"><span id="current-status"></span></div>
+						<div class="weatherText" id="highlow">High:<span id="current-high"></span>&deg;F</div>
+						<div class="weatherText" id="highlow">Low:<span id="current-low"></span>&deg;F</div>
+						<div class="weatherText" id="humidity">Humidity:<span id="current-humidity"></span>%</div>
+						<div class="weatherText" id= "wind">Wind Speed: <span id="current-windspeed"></span>mph <span id="current-winddirection"></span></div>
 						<hr>
-						<div class="weatherText" id= "sunrise"><span>Sunrise: 7:37am</span></div>
-						<div class="weatherText" id= "sunset"><span>Sunset:  5:37pm</span></div>
+						<div class="weatherText" id= "sunrise">Sunrise:<span id="current-sunrise"></span> am</div>
+						<div class="weatherText" id= "sunset">Sunset:<span id="current-sunset"></span> pm</div>
 					</div>
 					<div  id = "weatherPhoto">
-						<img src="http://openweathermap.org/img/wn/10d@2x.png">
+						<img id="current-icon" src="http://openweathermap.org/img/wn/10d@2x.png">
 					</div>
 				</div>
+				<div class="spinner"><br></div>
 			</div>
 			
-			<div class="hourlyForecast">
-				<table>
-					<th>Date</th><th>Time</th><th>Temp.</th><th>Outlook</th>
-						<tr><td>4/29/2020</td><td>7:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>8:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>9:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>10:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>11:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>12:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>7:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>7:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>7:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-						<tr><td>4/29/2020</td><td>7:00pm</td><td>40&deg;F</td><td>Rainy</td></tr>
-				</table>
-			</div>
+			
 		</div>
 
-		<div id="Tomorrow" class="tabcontent">
-			<h2>Tomorrow's Weather Outlook</h2>
-			<div class="weatherBox">
+		<div id="Hourly" class="tabcontent">
+			<div id="title"><h2>Hourly Forecast</h2></div>
+			<div class="hourlyForecast" id = "hourly-table">
 				<div id="town">
-					<b>Hawthorne, NJ</b><br>
-					<i>Coordinates: -118.41, 34.09</i>
+					<b>Pick A Location Above</b><br>
 				</div>
-				<div id="weather">
-					<div class="weatherTextContainer">
-						<div class="weatherText" id="temp"><span>55 &deg;F</span></div>
-						<div class="weatherText" id="status"><span>CLOUDY</span></div>
-						<div class="weatherText" id="highlow"><span>High: 52 &deg;F</span></div>
-						<div class="weatherText" id="highlow"><span>Low: 40 &deg;F</span></div>
-						<div class="weatherText" id="humidity"><span>Humidity: 20%</span></div>
-						<div class="weatherText" id="UV"><span>UV Index 0 of 10</span></div>
-						<div class="weatherText" id= "wind"><span>Wind Speed: 2.71m/s NE</span></div>
-						<hr>
-						<div class="weatherText" id= "sunrise"><span>Sunrise: 7:37am</span></div>
-						<div class="weatherText" id= "sunset"><span>Sunset:  5:37pm</span></div>
-					</div>
-					<div  id = "weatherPhoto">
-						<img src="http://openweathermap.org/img/wn/10d@2x.png">
-					</div>
-				</div>
-			</div>
-		
-		</div>
-
-		<div id="10-Day" class="tabcontent">
-		  <h3>10-Day Forecast</h3>
-		 <div class="hourlyForecast">
 				<table>
-					<th>Day</th><th>Outlook</th><th>High/Low</th><th>Wind</th><th>Humidity</th>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
-						<tr><td>THU<br>April 30<img src="http://openweathermap.org/img/wn/10d@2x.png"></td><td>Rainy</td><td>60&deg;F/40&deg;F</td><td>ESE 11 mph</td><td>77%</td></tr>
 				</table>
 			</div>
 		</div>
 		
 		<script>
+			function getLocation() {
+			  if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			  } else { 
+				x.innerHTML = "Geolocation is not supported by this browser.";
+			  }
+			}
+			
 			function openTab(tabName)
 			{
 				var tabcontent = document.getElementsByClassName("tabcontent");

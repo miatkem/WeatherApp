@@ -19,7 +19,7 @@
 	padding-left: 48px;
 	
 }
-.searchBar form{
+.searchBar #search-geolocation, #search-zip{
 	margin: auto;
 	background: #d2d6d1;
 	padding: 5px 10px;
@@ -95,17 +95,20 @@
   margin-left: 20%;
   margin-right: 20%;
 }
+.tabcontent #title{
+	margin: auto;
+	display: block;
+	text-align: center;
+}
 
 .weatherBox { 
+	margin: auto;
 	width:400px;
 	height:300px;
 	background: #7fb5c2;
 	background-image: linear-gradient(#4a6f85, #7fb5c2);
 	display: block;
 	color: #f1f3df;
-	float:left;
-	margin-left: 20px;
-	margin-right: 20px;
 }
 
 .weatherBox #town{
@@ -147,23 +150,51 @@
 	height:150px;
 }
 
+.spinner {
+	width: 100px;
+	height: 100px;
+	
+	border: 20px solid #000000;
+	border-top: 20px solid red;
+	
+	border-radius: 50%;
+	background-color: cyan;
+	
+	animation: AAA .7s linear infinite;
+}
+
+@keyframes AAA {
+	0% { transform: rotate(0deg);}
+	50% { transform:  rotate(90deg);}
+	100% { transform: rotate(360deg);}
+}
+
+
 .hourlyForecast{
 	color: #f1f3df;
 	background-image: linear-gradient(#4a6f85, #7fb5c2);
 	width: 400px;
-	float: left;
-	margin-left: 20px;
-	margin-right: 20px;
-	padding-bottom: 40px;
+	height:400px;
+	margin:auto;
+	overflow: scroll;
+	-ms-overflow-x: auto; /* IE8 */
+    overflow-x: auto;
+}
+
+.hourlyForecast #town{
+	color: f1f3df;
+	font-size: 16px;
+	margin: auto;
+	text-align: center;
+	padding-top: 10px;
 }
 
 .hourlyForecast th, td{
 	color: #f1f3df;
-	width:95px;
 	text-align:center;
 	vertical-align:center;
-	height:20px;
 	padding: auto;
+	font-size: 18px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #d2d6d1;
